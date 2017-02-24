@@ -104,7 +104,7 @@
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
     var antitest = function () { 
-      return ( _.identity(test()) ? true : false ); 
+      return (function(test) { _.identity(test) ? false : true } ); 
     };
 
     return _.filter(collection, antitest);
@@ -112,6 +112,12 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
+
+    var result = [];
+
+    _.each( {})
+
+    return result;
   };
 
 
