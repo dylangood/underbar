@@ -103,11 +103,19 @@
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
-    var antitest = function () { 
-      return (function(test) { _.identity(test) ? false : true } ); 
-    };
+    //   DYLAN: Yeah, I tried. For hours. I couldn't resolve the
+    //   multiple layers of function calls and how to correctly pass 
+    //   the arguments/parameters.
 
-    return _.filter(collection, antitest);
+     var result = [];
+
+     _.each(collection, function(item, index) {
+      if ( !test(item) ) {
+        result.push(collection[index]);
+      }
+    });
+
+    return result;
   };
 
   // Produce a duplicate-free version of the array.
@@ -115,7 +123,11 @@
 
     var result = [];
 
-    _.each( {})
+    _.each(array, function(target) {
+      if (-1 === _.indexOf(result, target) ) { 
+        result.push(target); 
+      } 
+    });
 
     return result;
   };
