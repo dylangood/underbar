@@ -181,18 +181,20 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
-    if( this.arguments < 3 ) {
+    if( arguments.length < 3 ) {
       var firstKey = undefined;
+      var memo = undefined;
 
       _.each(collection, function(value, key) {
         if( undefined === firstKey ) { 
           firstKey = key; 
+          memo = collection[firstKey];
         } else {
-          collection[firstKey] = iterator(value, collection[firstKey]);
+          memo = iterator(memo, value);
         } 
       });
 
-      return firstKey;
+      return memo;
 
     } else {
       _.each(collection, function(value) {
