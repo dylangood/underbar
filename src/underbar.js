@@ -41,10 +41,10 @@
     if( n === undefined ) {
       return array[array.length - 1];
     } else {
-      if( n > array.length ) {
+      if( n >= array.length ) {
         return array;
       } else {
-        return array.slice(array.length - n , array.length);
+        return array.slice(array.length - n , array.length );
       }
     }
   };
@@ -181,28 +181,50 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
-    if( arguments.length < 3 ) {
-      var firstKey = undefined;
+//    if( arguments.length < 3 ) {
+//      var firstKey = undefined;
       var memo = undefined;
 
-      _.each(collection, function(value, key) {
-        if( undefined === firstKey ) { 
-          firstKey = key; 
-          memo = collection[firstKey];
-        } else {
+      // I completely misunderstood what accumulator was previously. To wit:
+      if( arguments.length >= 3 ) {
+        memo = accumulator;
+
+        _.each(collection, function(value) {
+          // apply iterator
           memo = iterator(memo, value);
-        } 
-      });
+        });
+
+      } else {
+        memo = _.first(collection);
+        var copy = _.last(collection, collection.length - 1);
+
+        _.each(copy, function(value) {
+          // apply iterator
+          memo = iterator(memo, value);
+        });
+
+      }
 
       return memo;
 
-    } else {
-      _.each(collection, function(value) {
-        accumulator = iterator(accumulator, value);     
-      });
+    //   _.each(collection, function(value, key) {
+    //     if( undefined === firstKey ) { 
+    //       firstKey = key; 
+    //       memo = collection[firstKey];
+    //     } else {
+    //       memo = iterator(memo, value);
+    //     } 
+    //   });
 
-      return accumulator;
-    }
+    //   return memo;
+
+    // } else {
+    //   _.each(collection, function(value) {
+    //     accumulator = iterator(accumulator, value);     
+    //   });
+
+    //   return accumulator;
+//    }
   };
 
   // Determine if the array or object contains a given value (using `===`).
@@ -278,7 +300,7 @@
 
     }, memo );
 
-    return memo;
+    return ( memo ? true : false );
 
   };
 
