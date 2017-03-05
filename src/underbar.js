@@ -221,7 +221,6 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
-    //   DYLAN: I tried a little, but I have relatively low confidence in my _.reduce code.
     var noCallback = (1 === arguments.length);
 
     return _.reduce(collection, function(stillTrue, item) {
@@ -242,6 +241,16 @@
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    var noCallback = (1 === arguments.length);
+
+    return !_.every(collection, function(item) {
+      if (noCallback) {
+        return !_.identity(item) ? true : false;
+      } else {
+        return !iterator(item) ? true : false;
+      }
+    });
+
   };
 
 
