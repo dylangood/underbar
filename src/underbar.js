@@ -181,8 +181,7 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
-//    if( arguments.length < 3 ) {
-//      var firstKey = undefined;
+
       var memo = undefined;
 
       // I completely misunderstood what accumulator was previously. To wit:
@@ -190,16 +189,13 @@
         memo = accumulator;
 
         _.each(collection, function(value) {
-          // apply iterator
           memo = iterator(memo, value);
         });
 
       } else {
         memo = _.first(collection);
-        var copy = _.last(collection, collection.length - 1);
 
-        _.each(copy, function(value) {
-          // apply iterator
+        _.each(_.last(collection, collection.length - 1), function(value) {
           memo = iterator(memo, value);
         });
 
@@ -207,24 +203,6 @@
 
       return memo;
 
-    //   _.each(collection, function(value, key) {
-    //     if( undefined === firstKey ) { 
-    //       firstKey = key; 
-    //       memo = collection[firstKey];
-    //     } else {
-    //       memo = iterator(memo, value);
-    //     } 
-    //   });
-
-    //   return memo;
-
-    // } else {
-    //   _.each(collection, function(value) {
-    //     accumulator = iterator(accumulator, value);     
-    //   });
-
-    //   return accumulator;
-//    }
   };
 
   // Determine if the array or object contains a given value (using `===`).
