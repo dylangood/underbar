@@ -221,6 +221,65 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    //   DYLAN: I tried a little, but I have relatively low confidence in my _.reduce code.
+    var memo = true;
+    var isEmpty = function(obj) {
+      for( var k in obj ) {
+        if(obj.hasOwnProperty(k)) {
+          return false;
+        }
+      }
+    }
+
+// Handle null object and empty arrays and empty objects:
+    if ( collection === undefined ) {
+        return false;
+    } else {
+      if( Array.isArray(collection) && 0 === collection.length ) {
+        return true;
+      } else {
+        if( 'object' === typeof collection && isEmpty(collection) ) {
+          return true;
+        }
+      }
+    }
+
+    memo = _.reduce( collection, function(value) {
+
+// Handle 'truthy' and 'falsy' cases: non-zero numbers, 0, {} properties, null, and undefined
+      if( 'number' === typeof iterator(value) ) {
+        if( 0 !== iterator(value) ) {
+          memo = memo && true;
+        } else {
+          memo = memo && false;
+        }
+      } else {
+        if( 'object' === typeof iterator(value) ) {
+          if( isEmpty( iterator(value) ) ) {
+            memo = memo && true;
+          } else {
+            if( null === iterator(value) ) {
+              memo = memo && false;
+            }
+          }
+        } else {
+          if( 'undefined' === typeof iterator(value) ) {
+            memo = memo && false;
+          } else {
+            memo = memo && iterator(value);
+          }
+        }
+      }
+
+// At the end of each iteration:
+      if( false === memo ) { 
+        return false;
+      }
+
+    }, memo );
+
+    return memo;
+
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
