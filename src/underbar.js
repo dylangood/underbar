@@ -328,7 +328,7 @@
     };
   };
 
-  // Memorize an expensive function's results by storing them. You may assume
+  // Memoize an expensive function's results by storing them. You may assume
   // that the function only takes primitives as arguments.
   // memoize could be renamed to oncePerUniqueArgumentList; memoize does the
   // same thing as once, but based on many sets of unique arguments.
@@ -337,6 +337,19 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var previousCalls = {};
+    var result;
+    var callKey = func.toString() + arguments.toString();
+
+    return function() {
+      if ( _.contains(previousCalls, callKey) ) {
+        return previousCalls[callKey];
+      } else {
+        result = func.apply(this, arguments);
+        _.defaults( previousCalls, {callKey : result} );
+        return result;
+      }
+    }
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -346,6 +359,11 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    var lateArguments = Array.prototype.slice.call(arguments, 2);
+
+    return setTimeout(function(){
+      return func.apply(this, lateArguments);
+    }, wait);
   };
 
 
@@ -360,6 +378,21 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var randomCopy = new Array(array.length);
+
+    for( var i = 0; i < randomCopy.length; i++) {
+      var randomNumber = Math.floor( Math.random() * array.length );
+      if( _.contains(randomCopy, randomNumber) ) {
+        i--;
+      } else {
+        randomCopy[i] = randomNumber;
+      }
+    }
+    for( var i = 0; i < randomCopy.length; i++) {
+      randomCopy[i] = array[randomCopy[i]];
+    }
+
+    return randomCopy;
   };
 
 
